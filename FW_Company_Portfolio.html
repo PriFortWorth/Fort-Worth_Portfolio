@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fort Worth Company Portfolio — Q4 2025 Financial Results</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1B2A4A; }
+
+  .header { background: #1B2A4A; color: #fff; padding: 28px 32px 22px; }
+  .header h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+  .header p  { font-size: 13px; color: #94A3B8; }
+
+  .toolbar { background: #fff; border-bottom: 1px solid #E2E8F0; padding: 14px 32px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .toolbar span { font-size: 12px; color: #5A6478; margin-right: 4px; font-weight: 500; }
+  .filter-btn { padding: 5px 14px; font-size: 11px; font-weight: 500; border-radius: 20px; border: 1px solid #D0D5DF; background: #fff; color: #5A6478; cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: #378ADD; color: #378ADD; }
+  .filter-btn.active { background: #1B2A4A; color: #fff; border-color: #1B2A4A; }
+
+  .summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 32px; }
+  .sum-card { background: #fff; border-radius: 10px; padding: 14px 18px; border: 1px solid #E2E8F0; }
+  .sum-label { font-size: 11px; color: #8E97AA; margin-bottom: 4px; }
+  .sum-val { font-size: 22px; font-weight: 600; color: #1B2A4A; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; padding: 0 32px 32px; }
+
+  .card { background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; transition: box-shadow .2s, border-color .2s; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #CBD5E1; }
+
+  .card-header { padding: 14px 16px 12px; border-bottom: 1px solid #F1F5F9; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .co-name { font-size: 14px; font-weight: 600; color: #1B2A4A; line-height: 1.35; }
+  .ticker-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 5px; background: #EEF0F4; color: #5A6478; white-space: nowrap; flex-shrink: 0; margin-left: 8px; margin-top: 1px; }
+  .private-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 5px; background: #FFF3CD; color: #856404; white-space: nowrap; flex-shrink: 0; margin-left: 8px; }
+  .industry-pill { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 10px; }
+  .hq-text { font-size: 10px; color: #8E97AA; margin-top: 6px; }
+
+  .card-body { padding: 14px 16px; }
+  .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .metric { text-align: center; }
+  .metric-label { font-size: 10px; color: #8E97AA; margin-bottom: 3px; text-transform: uppercase; letter-spacing: .04em; }
+  .metric-val { font-size: 14px; font-weight: 600; }
+  .pos { color: #1D9E75; }
+  .neg { color: #E24B4A; }
+  .neutral { color: #1B2A4A; }
+
+  .divider { border: none; border-top: 1px solid #F1F5F9; margin: 10px 0; }
+
+  .vs-est { font-size: 11px; font-weight: 500; margin-bottom: 8px; padding: 5px 8px; border-radius: 6px; }
+  .vs-beat { background: #E5F5EF; color: #0F6E56; }
+  .vs-miss { background: #FFF3CD; color: #856404; font-style: italic; }
+  .vs-neutral { background: #EEF0F4; color: #5A6478; }
+
+  .notes { font-size: 11px; color: #5A6478; line-height: 1.6; }
+  .quarter-tag { font-size: 10px; color: #8E97AA; text-align: right; margin-top: 10px; padding-top: 8px; border-top: 1px solid #F1F5F9; }
+
+  /* Industry colors */
+  .ind-Airlines     { background: #EAF3FB; color: #0C447C; }
+  .ind-Healthcare   { background: #E1F5EE; color: #085041; }
+  .ind-Homebuilding { background: #FAEEDA; color: #633806; }
+  .ind-Energy       { background: #FCEBEB; color: #791F1F; }
+  .ind-Industrials  { background: #EEEDFE; color: #3C3489; }
+  .ind-Technology   { background: #D4EDDA; color: #155724; }
+  .ind-Financial    { background: #FFF3CD; color: #856404; }
+  .ind-Materials    { background: #FAECE7; color: #712B13; }
+  .ind-Consumer     { background: #FBEAF0; color: #72243E; }
+
+  .footer { text-align: center; font-size: 11px; color: #8E97AA; padding: 20px 32px; border-top: 1px solid #E2E8F0; background: #fff; margin-top: 8px; line-height: 1.7; }
+
+  @media (max-width: 640px) {
+    .header, .toolbar, .summary-bar, .grid { padding-left: 16px; padding-right: 16px; }
+    .summary-bar { grid-template-columns: 1fr 1fr; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Fort Worth Company Portfolio</h1>
+  <p>Latest Quarterly Financial Results &nbsp;·&nbsp; Revenue, EPS, Net Income &nbsp;·&nbsp; Data as of April 2026</p>
+</div>
+
+<div class="toolbar">
+  <span>Filter:</span>
+  <button class="filter-btn active" onclick="filterCards('all',this)">All (16)</button>
+  <button class="filter-btn" onclick="filterCards('Airlines',this)">Airlines</button>
+  <button class="filter-btn" onclick="filterCards('Healthcare',this)">Healthcare</button>
+  <button class="filter-btn" onclick="filterCards('Homebuilding',this)">Homebuilding</button>
+  <button class="filter-btn" onclick="filterCards('Energy',this)">Energy</button>
+  <button class="filter-btn" onclick="filterCards('Industrials',this)">Industrials</button>
+  <button class="filter-btn" onclick="filterCards('Technology',this)">Technology</button>
+  <button class="filter-btn" onclick="filterCards('Financial',this)">Financial</button>
+  <button class="filter-btn" onclick="filterCards('Materials',this)">Materials</button>
+  <button class="filter-btn" onclick="filterCards('Consumer',this)">Consumer</button>
+</div>
+
+<div class="summary-bar">
+  <div class="sum-card"><div class="sum-label">Companies tracked</div><div class="sum-val">16</div></div>
+  <div class="sum-card"><div class="sum-label">Public companies</div><div class="sum-val">15</div></div>
+  <div class="sum-card"><div class="sum-label">Reporting period</div><div class="sum-val">Q4 2025</div></div>
+  <div class="sum-card"><div class="sum-label">Industries covered</div><div class="sum-val">9</div></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  Sources: SEC Form 8-K / 10-Q / 10-K filings &amp; company press releases &nbsp;·&nbsp;
+  GE = GE Aerospace (post-Vernova spinoff Apr 2024) &nbsp;·&nbsp;
+  GM Financial is a wholly owned GM subsidiary (not separately traded) &nbsp;·&nbsp;
+  TTI Inc. is a private Berkshire Hathaway subsidiary — no public financials &nbsp;·&nbsp;
+  All figures in USD &nbsp;·&nbsp; Compiled by City of Fort Worth — Economic Development &nbsp;·&nbsp; April 2026
+</div>
+
+<script>
+const cos = [
+  {
+    name:"American Airlines Group", ticker:"AAL", hq:"Fort Worth, TX", industry:"Airlines",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$14.0B", eps:"$0.16 GAAP", ni:"$99M",
+    epsNeg:false, niNeg:false,
+    beat:"Revenue beat — missed EPS est. $0.38",
+    beatType:"miss",
+    notes:"Record Q4 & full-year revenue ($54.6B). ~$325M govt shutdown impact. Net income $111M for full year. Q1 2026 guidance: revenue +10%+ YoY (historically high quarterly growth), adj. EPS loss toward lower end of ($0.10)–($0.50) range. Total debt reduced $2.1B in 2025. FY2026 adj. EPS guidance $1.70–$2.70."
+  },
+  {
+    name:"Alcon Inc.", ticker:"ALC", hq:"Fort Worth, TX", industry:"Healthcare",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$2.7B", eps:"$0.78 GAAP / $0.82 adj.", ni:"~$248M",
+    epsNeg:false, niNeg:false,
+    beat:"EPS beat est. $0.757",
+    beatType:"beat",
+    notes:"Eye care — surgical & vision care. Q4 revenue +9% YoY (7% constant currency). Full-year 2025 net sales $10.3B (+5%); core diluted EPS $3.07. $91M tariff charges in 2025. Free cash flow $1.7B. 2026 guidance: 5–7% CC sales growth; core EPS +9–12%; $100M efficiency savings targeted; tariff headwind $125–$175M."
+  },
+  {
+    name:"D.R. Horton", ticker:"DHI", hq:"Arlington, TX", industry:"Homebuilding",
+    quarter:"Q1 FY2026 (Dec 31, 2025)", revenue:"$6.9B", eps:"$2.03", ni:"$595M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat EPS est. $1.95 and revenue est. $6.67B",
+    beatType:"beat",
+    notes:"America's largest homebuilder (~1 in 7 new U.S. homes). Closed 17,818 homes. Net sales orders +3% YoY to 18,300 homes valued at $6.7B. Pre-tax margin 11.6%. Returned $801M to shareholders via buybacks + dividends. Total liquidity $6.6B. 590,500 lots in portfolio (75% controlled). Trailing 12-month ROE 13.7%."
+  },
+  {
+    name:"Range Resources Corp.", ticker:"RRC", hq:"Fort Worth, TX", industry:"Energy",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$787M–$812M", eps:"$0.82 adj. / $0.75 GAAP", ni:"$179M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat EPS est. $0.68 by +20%; beat revenue est. by 6.5%",
+    beatType:"beat",
+    notes:"Natural gas E&P focused on Marcellus Shale, PA. Revenue +16–18% YoY. Net income +89% YoY. Operating profit +59% YoY. Cash from operations $257.5M (+18%). Surpassed EPS estimates all 4 quarters in 2025. Strong FCF generation and net debt reduction. Q1 2026 consensus EPS est. $0.92 on $848M revenue."
+  },
+  {
+    name:"AZZ Inc.", ticker:"AZZ", hq:"Fort Worth, TX", industry:"Industrials",
+    quarter:"Q3 FY2026 (Nov 30, 2025)", revenue:"$425.7M", eps:"$1.36 GAAP / $1.52 adj.", ni:"$41.1M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat adj. EPS est. $1.49; beat revenue est. $419M",
+    beatType:"beat",
+    notes:"Leading independent hot-dip galvanizing & coil coating solutions. Metal Coatings $195M (+15.7%); Precoat Metals $230.7M (−1.8%). Adj. EBITDA $91.2M (21.4% margin). Net leverage 1.6x after $325M YTD debt paydown. $20M share buyback in quarter. FY2026 guidance: $1.625–$1.70B sales; $5.90–$6.20 adj. EPS."
+  },
+  {
+    name:"Omnicell Inc.", ticker:"OMCL", hq:"Fort Worth, TX", industry:"Healthcare",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$314M", eps:"−$0.05 GAAP / $0.40 adj.", ni:"−$2M GAAP",
+    epsNeg:true, niNeg:true,
+    beat:"Revenue in line; missed adj. EPS est. $0.47",
+    beatType:"miss",
+    notes:"Pharmacy automation & medication management tech. Q4 revenue +2% YoY. Product $180M; service $134M (+8%). Full-year 2025 revenue $1.185B; ARR $635.6M. Non-GAAP EBITDA $37M in Q4. $7M tariff impact in 2025. 2026 guidance: $1.215–$1.255B revenue; $1.65–$1.85 non-GAAP EPS; $15M tariff headwind."
+  },
+  {
+    name:"TXO Partners, L.P.", ticker:"TXO", hq:"Fort Worth, TX", industry:"Energy",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$125.9M", eps:"−$0.52 (basic)", ni:"−$28.3M",
+    epsNeg:true, niNeg:true,
+    beat:"Q4 distribution declared: $0.30/unit",
+    beatType:"neutral",
+    notes:"Conventional oil & gas MLP, Permian & Williston Basins. Full-year 2025 revenue $401M (+42% from acquisitions). Full-year net loss $21.6M driven by higher D&D amortization. Q3 was profitable ($4.4M net income, $0.08 EPS). Distribution paid March 17, 2026. Williston Basin (Elm Coulee) expansion ongoing."
+  },
+  {
+    name:"Bell Textron / Textron Inc.", ticker:"TXT", hq:"Fort Worth, TX (Bell) / Providence, RI", industry:"Industrials",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$4.2B total / $1.3B Bell", eps:"$1.33 GAAP / $1.73 adj.", ni:"~$260M",
+    epsNeg:false, niNeg:false,
+    beat:"In-line with adj. EPS est. $1.73",
+    beatType:"beat",
+    notes:"Bell helicopter (Fort Worth): revenue +11% YoY to $1.3B; military +$139M on MV-75 (U.S. Army). Delivered 78 commercial helicopters. Bell backlog $7.8B. Textron Aviation +36% to $1.7B (49 jets). Full-year 2025 record revenue $14.8B (+8%); adj. EPS $6.10. 2026 guidance: ~$15.5B revenue; $6.40–$6.60 adj. EPS."
+  },
+  {
+    name:"GM Financial", ticker:"GM sub.", hq:"Fort Worth, TX", industry:"Financial",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"N/A (captive finance)", eps:"N/A", ni:"$460M",
+    epsNeg:false, niNeg:false,
+    beat:"Full-year net income $2.1B (+11% vs. $1.9B in 2024)",
+    beatType:"beat",
+    notes:"Wholly owned captive finance subsidiary of General Motors, HQ in Fort Worth. Q4 net income $460M (vs. $215M Q4 2024). Earning assets $126.5B. Liquidity $35.8B. Full-year originations $55.9B; retail receivables $75.4B. Full-year EBT-adjusted $2.8B (within $2.5–$3B guidance). Paid $1.5B dividends to GM."
+  },
+  {
+    name:"Meta Platforms Inc.", ticker:"META", hq:"Menlo Park, CA", industry:"Technology",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$59.9B", eps:"$8.88", ni:"$22.8B",
+    epsNeg:false, niNeg:false,
+    beat:"Beat EPS est. $8.21 (+8.4%); beat revenue est. $58.6B",
+    beatType:"beat",
+    notes:"Social media, digital advertising & AI (Facebook, Instagram, WhatsApp). Q4 revenue +24% YoY. Operating margin 41%. Daily active people 3.58B (+7%). Ad impressions +18%; avg. price +6%. Reality Labs Q4 op. loss $6.0B. Full-year 2025 revenue $201B (+22%). 2026 capex guidance $115–$135B for AI infrastructure."
+  },
+  {
+    name:"GE Aerospace", ticker:"GE", hq:"Cincinnati, OH", industry:"Industrials",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$11.87B–$12.72B", eps:"$1.57 adj.", ni:"~$1.9B",
+    epsNeg:false, niNeg:false,
+    beat:"Beat adj. EPS est. $1.43 (+9.8%); beat revenue est. by 13.8%",
+    beatType:"beat",
+    notes:"Aerospace engines & systems (post-Vernova spinoff Apr 2024). Q4 revenue +17–20% YoY. Full-year 2025 revenue $42.9B (+21%); op. profit $9.1B (+25%); FCF $7.7B (+24%). Full-year adj. EPS $6.37 (+38%). Orders +74% in Q4; backlog ~$190B (+$20B YoY). 2026 adj. EPS guidance $7.10–$7.40 midpoint."
+  },
+  {
+    name:"Parker-Hannifin Corp.", ticker:"PH", hq:"Cleveland, OH", industry:"Industrials",
+    quarter:"Q2 FY2026 (Dec 31, 2025)", revenue:"$5.2B (record)", eps:"$6.60 GAAP / $7.65 adj.", ni:"$845M",
+    epsNeg:false, niNeg:false,
+    beat:"Adj. EPS record +17% YoY; record sales +9% YoY (organic +6.6%)",
+    beatType:"beat",
+    notes:"Motion & control technologies — industrial & aerospace. Record Q2 sales $5.2B; organic +6.6%. Adj. segment op. margin 27.1% (+150bps). Aerospace: 11 consecutive quarters of double-digit growth. Announced $9.25B Filtration Group acquisition. Raised FY2026 guidance: EPS ~$30.40–$31.00; revenue ~$20.9–$21.3B."
+  },
+  {
+    name:"Molson Coors Beverage Co.", ticker:"TAP", hq:"Golden, CO / Montréal, Canada", industry:"Consumer",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$2.66B", eps:"$1.22 GAAP / $1.21 adj.", ni:"$238M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat adj. EPS est. $1.16; missed revenue est. $2.72B (−2.2%)",
+    beatType:"miss",
+    notes:"Beer & beverage manufacturing. Q4 revenue −2.7% YoY; financial volume −7.7%. Net income −17.2% YoY. Full-year 2025 revenue $11.1B (−4.2%). Full-year GAAP loss driven by $3.65B goodwill impairment + $274M intangible impairments. Full-year underlying EPS $5.42 (−9.1%). 2026: significant cost headwinds from tariffs and soft consumer demand."
+  },
+  {
+    name:"FirstCash Holdings Inc.", ticker:"FCFS", hq:"Fort Worth, TX", industry:"Financial",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$1.058B–$1.1B", eps:"$2.35 GAAP / $2.64 adj.", ni:"$104M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat adj. EPS est. $2.54; first-ever $1B+ quarterly revenue",
+    beatType:"beat",
+    notes:"Leading international pawn store operator (3,330+ locations: U.S., Latin America, UK). Q4 revenue +20% YoY. Full-year 2025 revenue $3.661B (+8%); GAAP EPS $7.42 (+29%); adj. EPS +31%. Net income $330M GAAP / $390M adj. Adj. EBITDA $698M (+27%). H&T UK acquisition (286 stores). Operating cash flow $586M."
+  },
+  {
+    name:"MP Materials Corp.", ticker:"MP", hq:"Las Vegas, NV (Texas facility planned)", industry:"Materials",
+    quarter:"Q4 2025 (Dec 31, 2025)", revenue:"$52.7M", eps:"$0.05 GAAP / $0.09 adj.", ni:"$9.4M",
+    epsNeg:false, niNeg:false,
+    beat:"Beat adj. EPS est. $0.02 by 350%; revenue −13.6% YoY",
+    beatType:"beat",
+    notes:"Rare earth mining & magnet manufacturing. Revenue decline from cessation of China sales (July 2025, DoW agreement). $51M Price Protection Agreement income (DoW, floor $110/kg) drove profitability. Full-year 2025 revenue $224.4M (+10%); NdPr oxide output doubled. First commercial magnets produced Dec 2025. 2026 capex $500–$600M; $200M TX incentive secured."
+  },
+  {
+    name:"TTI Inc.", ticker:"Private", hq:"Fort Worth, TX", industry:"Industrials",
+    quarter:"N/A — Private Company", revenue:"~$10B (est.)", eps:"N/A", ni:"N/A",
+    epsNeg:false, niNeg:false,
+    beat:"No public financials — private Berkshire Hathaway subsidiary",
+    beatType:"neutral",
+    notes:"One of the world's largest passive electronic component distributors (resistors, capacitors, connectors, sensors). Wholly owned by Berkshire Hathaway since 2007. HQ: Fort Worth, TX. ~7,000+ employees globally. Serves aerospace, defense, automotive, and industrial markets. No SEC filing requirement as a private subsidiary."
+  },
+];
+
+function renderCards(filter) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  cos.filter(c => filter === 'all' || c.industry === filter).forEach(co => {
+    const epsClass = co.epsNeg ? 'neg' : (co.eps === 'N/A' ? 'neutral' : 'pos');
+    const niClass  = co.niNeg  ? 'neg' : (co.ni  === 'N/A' ? 'neutral' : 'pos');
+    const beatClass = co.beatType === 'beat' ? 'vs-beat' : co.beatType === 'miss' ? 'vs-miss' : 'vs-neutral';
+    const tickerHtml = co.ticker === 'Private'
+      ? `<span class="private-badge">Private</span>`
+      : `<span class="ticker-badge">${co.ticker}</span>`;
+
+    grid.innerHTML += `
+      <div class="card" data-industry="${co.industry}">
+        <div class="card-header">
+          <div class="card-top">
+            <div class="co-name">${co.name}</div>
+            ${tickerHtml}
+          </div>
+          <span class="industry-pill ind-${co.industry}">${co.industry}</span>
+          <div class="hq-text">${co.hq}</div>
+        </div>
+        <div class="card-body">
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">Revenue</div>
+              <div class="metric-val neutral">${co.revenue}</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">EPS (Diluted)</div>
+              <div class="metric-val ${epsClass}">${co.eps}</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Net Income</div>
+              <div class="metric-val ${niClass}">${co.ni}</div>
+            </div>
+          </div>
+          <div class="vs-est ${beatClass}">${co.beat}</div>
+          <div class="notes">${co.notes}</div>
+          <div class="quarter-tag">${co.quarter}</div>
+        </div>
+      </div>`;
+  });
+}
+
+function filterCards(industry, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(industry);
+}
+
+renderCards('all');
+</script>
+</body>
+</html>
